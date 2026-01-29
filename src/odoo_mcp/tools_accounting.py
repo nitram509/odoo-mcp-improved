@@ -1,7 +1,7 @@
 """
 Implementación de herramientas (tools) para contabilidad en MCP-Odoo
 """
-
+import logging
 from datetime import datetime
 from typing import Dict, Any
 
@@ -98,6 +98,7 @@ def register_accounting_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'search_journal_entries'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Crea un nuevo asiento contable")
@@ -175,6 +176,7 @@ def register_accounting_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'create_journal_entry'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Calcula ratios financieros clave")
@@ -410,4 +412,5 @@ def register_accounting_tools(mcp: FastMCP) -> None:
             return {"success": True, "result": result}
 
         except Exception as e:
+            logging.error(f"Tool 'analyze_financial_ratios'", e)
             return {"success": False, "error": str(e)}

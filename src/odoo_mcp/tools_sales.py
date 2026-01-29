@@ -1,7 +1,7 @@
 """
 Implementación de herramientas (tools) para ventas en MCP-Odoo
 """
-
+import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any
 
@@ -86,6 +86,7 @@ def register_sales_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'search_sales_orders'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Crear un nuevo pedido de venta")
@@ -147,6 +148,7 @@ def register_sales_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'create_sales_order'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Analiza el rendimiento de ventas en un período")
@@ -338,4 +340,5 @@ def register_sales_tools(mcp: FastMCP) -> None:
             return {"success": True, "result": result}
 
         except Exception as e:
+            logging.error(f"Tool 'analyze_sales_performance'", e)
             return {"success": False, "error": str(e)}

@@ -1,7 +1,7 @@
 """
 Implementación de herramientas (tools) para compras en MCP-Odoo
 """
-
+import logging
 from datetime import datetime
 from typing import Dict, Any
 
@@ -87,6 +87,7 @@ def register_purchase_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'search_purchase_orders'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Crear una nueva orden de compra")
@@ -148,6 +149,7 @@ def register_purchase_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'create_purchase_order'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Analiza el rendimiento de los proveedores")
@@ -282,4 +284,5 @@ def register_purchase_tools(mcp: FastMCP) -> None:
             return {"success": True, "result": result}
 
         except Exception as e:
+            logging.error(f"Tool 'analyze_supplier_performance'", e)
             return {"success": False, "error": str(e)}

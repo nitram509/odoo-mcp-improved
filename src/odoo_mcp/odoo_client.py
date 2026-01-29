@@ -110,9 +110,7 @@ class OdooClient:
 
     def _execute(self, model, method, *args, **kwargs):
         """Execute a method on an Odoo model"""
-        return self._models.execute_kw(
-            self.db, self.uid, self.password, model, method, args, kwargs
-        )
+        return self._models.execute_kw(self.db, self.uid, self.password, model, method, args, kwargs)
 
     def execute_method(self, model, method, *args, **kwargs):
         """

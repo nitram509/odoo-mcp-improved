@@ -1,7 +1,7 @@
 """
 Implementación de herramientas (tools) para inventario en MCP-Odoo
 """
-
+import logging
 from datetime import datetime
 from typing import Dict, Any
 
@@ -109,6 +109,7 @@ def register_inventory_tools(mcp: FastMCP) -> None:
             }
 
         except Exception as e:
+            logging.error(f"Tool 'check_product_availability'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Crea un ajuste de inventario para corregir el stock")
@@ -227,6 +228,7 @@ def register_inventory_tools(mcp: FastMCP) -> None:
                 }
 
         except Exception as e:
+            logging.error(f"Tool 'create_inventory_adjustment'", e)
             return {"success": False, "error": str(e)}
 
     @mcp.tool(description="Calcula y analiza la rotación de inventario")
@@ -430,4 +432,5 @@ def register_inventory_tools(mcp: FastMCP) -> None:
             return {"success": True, "result": result}
 
         except Exception as e:
+            logging.error(f"Tool 'analyze_inventory_turnover'", e)
             return {"success": False, "error": str(e)}

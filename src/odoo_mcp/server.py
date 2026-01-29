@@ -1,4 +1,5 @@
 import json
+import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -336,6 +337,7 @@ def execute_method(
         result = odoo.execute_method(model, method, *args, **kwargs)
         return {"success": True, "result": result}
     except Exception as e:
+        logging.error(f"Tool 'execute_method'", e)
         return {"success": False, "error": str(e)}
 
 
