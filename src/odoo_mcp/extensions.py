@@ -2,7 +2,7 @@
 Integración de todos los módulos en el servidor MCP principal
 """
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 from .prompts import register_all_prompts
 from .resources import register_all_resources
@@ -18,10 +18,10 @@ def register_all_extensions(mcp: FastMCP) -> None:
     """
     # Registrar prompts
     register_all_prompts(mcp)
-    
+
     # Registrar recursos
     register_all_resources(mcp)
-    
+
     # Registrar herramientas
     register_sales_tools(mcp)
     register_purchase_tools(mcp)

@@ -2,11 +2,11 @@
 Implementación de prompts para MCP-Odoo
 """
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 def register_sales_prompts(mcp: FastMCP) -> None:
     """Registra prompts relacionados con ventas"""
-    
+
     @mcp.prompt(
         name="sales_analysis",
         description="Analiza las ventas de un período específico y proporciona insights clave"
@@ -25,7 +25,7 @@ def register_sales_prompts(mcp: FastMCP) -> None:
 
 def register_purchase_prompts(mcp: FastMCP) -> None:
     """Registra prompts relacionados con compras"""
-    
+
     @mcp.prompt(
         name="purchase_analysis",
         description="Analiza las órdenes de compra y el rendimiento de proveedores"
@@ -44,7 +44,7 @@ def register_purchase_prompts(mcp: FastMCP) -> None:
 
 def register_inventory_prompts(mcp: FastMCP) -> None:
     """Registra prompts relacionados con inventario"""
-    
+
     @mcp.prompt(
         name="inventory_management",
         description="Analiza el estado del inventario y proporciona recomendaciones"
@@ -63,7 +63,7 @@ def register_inventory_prompts(mcp: FastMCP) -> None:
 
 def register_accounting_prompts(mcp: FastMCP) -> None:
     """Registra prompts relacionados con contabilidad"""
-    
+
     @mcp.prompt(
         name="financial_analysis",
         description="Realiza un análisis financiero básico"

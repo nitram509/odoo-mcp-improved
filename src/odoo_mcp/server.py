@@ -1,24 +1,18 @@
-"""
-Actualización del servidor MCP principal para integrar todas las extensiones
-"""
-
 import json
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, AsyncIterator, Dict, List, Optional, Union, cast
+from typing import Any, AsyncIterator, Dict, List, Optional, Union
 
-from mcp.server.fastmcp import Context, FastMCP
+from fastmcp import FastMCP, Context
 from pydantic import BaseModel, Field
 
-from .odoo_client import OdooClient, get_odoo_client
 from .extensions import register_all_extensions
+from .odoo_client import OdooClient, get_odoo_client
 
 
 @dataclass
 class AppContext:
-    """Application context for the MCP server"""
-
     odoo: OdooClient
 
 
@@ -40,8 +34,6 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
 # Create MCP server
 mcp = FastMCP(
     "Odoo MCP Server",
-    description="MCP Server for interacting with Odoo ERP systems",
-    dependencies=["requests"],
     lifespan=app_lifespan,
 )
 
@@ -212,11 +204,11 @@ class SearchHolidaysResponse(BaseModel):
 
 @mcp.tool(description="Execute a custom method on an Odoo model")
 def execute_method(
-    ctx: Context,
-    model: str,
-    method: str,
-    args: List = None,
-    kwargs: Optional[Dict[str, Any]] = None,
+        ctx: Context,
+        model: str,
+        method: str,
+        args: List = None,
+        kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Execute a custom method on an Odoo model
@@ -254,9 +246,9 @@ def execute_method(
 
                 # Check if domain is wrapped unnecessarily ([domain] instead of domain)
                 if (
-                    isinstance(domain, list)
-                    and len(domain) == 1
-                    and isinstance(domain[0], list)
+                        isinstance(domain, list)
+                        and len(domain) == 1
+                        and isinstance(domain[0], list)
                 ):
                     # Case [[domain]] - unwrap to [domain]
                     domain = domain[0]
@@ -271,7 +263,7 @@ def execute_method(
                         domain_list = []
                         for cond in conditions:
                             if isinstance(cond, dict) and all(
-                                k in cond for k in ["field", "operator", "value"]
+                                    k in cond for k in ["field", "operator", "value"]
                             ):
                                 domain_list.append(
                                     [cond["field"], cond["operator"], cond["value"]]
@@ -281,7 +273,7 @@ def execute_method(
                     if not domain:
                         domain_list = []
                     elif all(isinstance(item, list) for item in domain) or any(
-                        item in ["&", "|", "!"] for item in domain
+                            item in ["&", "|", "!"] for item in domain
                     ):
                         domain_list = domain
                     elif len(domain) >= 3 and isinstance(domain[0], str):
@@ -292,14 +284,14 @@ def execute_method(
                     try:
                         parsed_domain = json.loads(domain)
                         if (
-                            isinstance(parsed_domain, dict)
-                            and "conditions" in parsed_domain
+                                isinstance(parsed_domain, dict)
+                                and "conditions" in parsed_domain
                         ):
                             conditions = parsed_domain.get("conditions", [])
                             domain_list = []
                             for cond in conditions:
                                 if isinstance(cond, dict) and all(
-                                    k in cond for k in ["field", "operator", "value"]
+                                        k in cond for k in ["field", "operator", "value"]
                                 ):
                                     domain_list.append(
                                         [cond["field"], cond["operator"], cond["value"]]
@@ -325,10 +317,10 @@ def execute_method(
                             continue
 
                         if (
-                            isinstance(cond, list)
-                            and len(cond) == 3
-                            and isinstance(cond[0], str)
-                            and isinstance(cond[1], str)
+                                isinstance(cond, list)
+                                and len(cond) == 3
+                                and isinstance(cond[0], str)
+                                and isinstance(cond[1], str)
                         ):
                             valid_conditions.append(cond)
 
@@ -349,9 +341,9 @@ def execute_method(
 
 @mcp.tool(description="Search for employees by name")
 def search_employee(
-    ctx: Context,
-    name: str,
-    limit: int = 20,
+        ctx: Context,
+        name: str,
+        limit: int = 20,
 ) -> SearchEmployeeResponse:
     """
     Search for employees by name using Odoo's name_search method.
@@ -382,10 +374,10 @@ def search_employee(
 
 @mcp.tool(description="Search for holidays within a date range")
 def search_holidays(
-    ctx: Context,
-    start_date: str,
-    end_date: str,
-    employee_id: Optional[int] = None,
+        ctx: Context,
+        start_date: str,
+        end_date: str,
+        employee_id: Optional[int] = None,
 ) -> SearchHolidaysResponse:
     """
     Searches for holidays within a specified date range.

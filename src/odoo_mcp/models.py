@@ -2,8 +2,10 @@
 Implementación de modelos Pydantic para MCP-Odoo
 """
 
-from typing import Any, Dict, List, Optional, Union
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
 
 # Modelos para Ventas
 class SalesOrderLineCreate(BaseModel):
