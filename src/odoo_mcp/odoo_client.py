@@ -62,53 +62,24 @@ class OdooClient:
         parsed_url = urllib.parse.urlparse(self.url)
         self.hostname = parsed_url.netloc
 
-        # Connect
         self._connect()
 
     def _connect(self):
         """Initialize the XML-RPC connection and authenticate"""
         # Tạo transport với timeout phù hợp
-        is_https = self.url.startswith("https://")
-        transport = RedirectTransport(
-            timeout=self.timeout, use_https=is_https, verify_ssl=self.verify_ssl
-        )
+        is_https = self.url.startswith("https")
+        transport = RedirectTransport(timeout=self.timeout, use_https=is_https, verify_ssl=self.verify_ssl)
 
-        print(f"Connecting to Odoo at: {self.url}", file=os.sys.stderr)
-        print(f"  Hostname: {self.hostname}", file=os.sys.stderr)
-        print(
-            f"  Timeout: {self.timeout}s, Verify SSL: {self.verify_ssl}",
-            file=os.sys.stderr,
-        )
-
-        # Thiết lập endpoints
-        self._common = xmlrpc.client.ServerProxy(
-            f"{self.url}/xmlrpc/2/common", transport=transport
-        )
-        self._models = xmlrpc.client.ServerProxy(
-            f"{self.url}/xmlrpc/2/object", transport=transport
-        )
+        self._common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common", transport=transport)
+        self._models = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object", transport=transport)
 
         # Xác thực và lấy user ID
-        print(
-            f"Authenticating with database: {self.db}, username: {self.username}",
-            file=os.sys.stderr,
-        )
-        try:
-            print(
-                f"Making request to {self.hostname}/xmlrpc/2/common (attempt 1)",
-                file=os.sys.stderr,
-            )
-            self.uid = self._common.authenticate(
-                self.db, self.username, self.password, {}
-            )
-            if not self.uid:
-                raise ValueError("Authentication failed: Invalid username or password")
-        except (socket.error, socket.timeout, ConnectionError, TimeoutError) as e:
-            print(f"Connection error: {str(e)}", file=os.sys.stderr)
-            raise ConnectionError(f"Failed to connect to Odoo server: {str(e)}")
-        except Exception as e:
-            print(f"Authentication error: {str(e)}", file=os.sys.stderr)
-            raise ValueError(f"Failed to authenticate with Odoo: {str(e)}")
+        logging.info(f"Authenticating with database: {self.db}, username: {self.username}")
+        logging.info(f"Making request to {self.hostname}/xmlrpc/2/common "
+                     f"| Timeout: {self.timeout}s, Verify SSL: {self.verify_ssl}")
+        self.uid = self._common.authenticate(self.db, self.username, self.password, {})
+        if not self.uid:
+            raise ValueError("Authentication failed: Invalid username or password")
 
     def execute_method(self, model, method, *args, **kwargs):
         """
