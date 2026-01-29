@@ -9,7 +9,7 @@ import re
 import socket
 import urllib.parse
 import xmlrpc.client
-from typing import List, Dict
+from typing import Dict
 
 from odoo_mcp.transport import RedirectTransport
 
@@ -18,13 +18,13 @@ class OdooClient:
     """Client for interacting with Odoo via XML-RPC"""
 
     def __init__(
-        self,
-        url,
-        db,
-        username,
-        password,
-        timeout=10,
-        verify_ssl=True,
+            self,
+            url,
+            db,
+            username,
+            password,
+            timeout=10,
+            verify_ssl=True,
     ):
         """
         Initialize the Odoo client with connection parameters
@@ -130,14 +130,18 @@ class OdooClient:
         try:
             # First search for model IDs
             model_ids = self.execute_method("ir.model", "search", [])
+        except Exception as e:
+            logging.error(f"Error search for model IDs", e)
+            return {"model_names": [], "models_details": {}, "error": "Error search for model IDs"}
 
-            if not model_ids:
-                return {
-                    "model_names": [],
-                    "models_details": {},
-                    "error": "No models found",
-                }
+        if not model_ids:
+            return {
+                "model_names": [],
+                "models_details": {},
+                "error": "No models found",
+            }
 
+        try:
             # Then read the model data with only the most basic fields
             # that are guaranteed to exist in all Odoo versions
             result = self.execute_method("ir.model", "read", model_ids, ["model", "name"])
@@ -214,7 +218,7 @@ class OdooClient:
             return {"error": str(e)}
 
     def search_read(
-        self, model_name, domain, fields=None, offset=None, limit=None, order=None
+            self, model_name, domain, fields=None, offset=None, limit=None, order=None
     ):
         """
         Search for records and read their data in a single call
@@ -299,8 +303,8 @@ def load_config():
 
     # Try environment variables first
     if all(
-        var in os.environ
-        for var in ["ODOO_URL", "ODOO_DB", "ODOO_USERNAME", "ODOO_PASSWORD"]
+            var in os.environ
+            for var in ["ODOO_URL", "ODOO_DB", "ODOO_USERNAME", "ODOO_PASSWORD"]
     ):
         return {
             "url": os.environ["ODOO_URL"],
