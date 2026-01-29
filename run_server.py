@@ -42,9 +42,6 @@ def setup_logging():
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
-    # logger = logging.getLogger(__name__)
-    logger.setLevel(logging.ERROR)
-
     return logger
 
 
