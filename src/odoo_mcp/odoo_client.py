@@ -3,11 +3,13 @@ Odoo XML-RPC client for MCP server integration
 """
 
 import json
+import logging
 import os
 import re
 import socket
 import urllib.parse
 import xmlrpc.client
+from typing import List, Dict
 
 from odoo_mcp.transport import RedirectTransport
 
@@ -108,10 +110,6 @@ class OdooClient:
             print(f"Authentication error: {str(e)}", file=os.sys.stderr)
             raise ValueError(f"Failed to authenticate with Odoo: {str(e)}")
 
-    def _execute(self, model, method, *args, **kwargs):
-        """Execute a method on an Odoo model"""
-        return self._models.execute_kw(self.db, self.uid, self.password, model, method, args, kwargs)
-
     def execute_method(self, model, method, *args, **kwargs):
         """
         Execute an arbitrary method on a model
@@ -125,26 +123,13 @@ class OdooClient:
         Returns:
             Result of the method execution
         """
-        return self._execute(model, method, *args, **kwargs)
+        return self._models.execute_kw(self.db, self.uid, self.password, model, method, args, kwargs)
 
-    def get_models(self):
-        """
-        Get a list of all available models in the system
-
-        Returns:
-            List of model names
-
-        Examples:
-            >>> client = OdooClient(url, db, username, password)
-            >>> models = client.get_models()
-            >>> print(len(models))
-            125
-            >>> print(models[:5])
-            ['res.partner', 'res.users', 'res.company', 'res.groups', 'ir.model']
-        """
+    def get_models(self) -> Dict[str, any]:
+        """Get a list of all available models in the system"""
         try:
             # First search for model IDs
-            model_ids = self._execute("ir.model", "search", [])
+            model_ids = self.execute_method("ir.model", "search", [])
 
             if not model_ids:
                 return {
@@ -155,7 +140,7 @@ class OdooClient:
 
             # Then read the model data with only the most basic fields
             # that are guaranteed to exist in all Odoo versions
-            result = self._execute("ir.model", "read", model_ids, ["model", "name"])
+            result = self.execute_method("ir.model", "read", model_ids, ["model", "name"])
 
             # Extract and sort model names alphabetically
             models = sorted([rec["model"] for rec in result])
@@ -190,7 +175,7 @@ class OdooClient:
             'Contact'
         """
         try:
-            result = self._execute(
+            result = self.execute_method(
                 "ir.model",
                 "search_read",
                 [("model", "=", model_name)],
@@ -222,7 +207,7 @@ class OdooClient:
             'char'
         """
         try:
-            fields = self._execute(model_name, "fields_get")
+            fields = self.execute_method(model_name, "fields_get")
             return fields
         except Exception as e:
             print(f"Error retrieving fields: {str(e)}", file=os.sys.stderr)
@@ -262,10 +247,10 @@ class OdooClient:
             if order is not None:
                 kwargs["order"] = order
 
-            result = self._execute(model_name, "search_read", domain, **kwargs)
+            result = self.execute_method(model_name, "search_read", domain, **kwargs)
             return result
         except Exception as e:
-            print(f"Error in search_read: {str(e)}", file=os.sys.stderr)
+            logging.error(f"Error in search_read", e)
             return []
 
     def read_records(self, model_name, ids, fields=None):
@@ -291,7 +276,7 @@ class OdooClient:
             if fields is not None:
                 kwargs["fields"] = fields
 
-            result = self._execute(model_name, "read", ids, **kwargs)
+            result = self.execute_method(model_name, "read", ids, **kwargs)
             return result
         except Exception as e:
             print(f"Error reading records: {str(e)}", file=os.sys.stderr)
