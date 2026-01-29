@@ -31,11 +31,7 @@ def main() -> int:
         sys.stderr.flush()  # Ensure log information is written immediately
 
         # Use the run() method directly
-        mcp.run(
-            # FIXME make configureable
-            host="0.0.0.0",
-            port=8081
-        )
+        mcp.run()
 
         # If execution reaches here, the server exited normally
         print("MCP server stopped normally", file=sys.stderr)

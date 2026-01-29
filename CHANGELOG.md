@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2026-01-29
+
+* using Python 3.12
+* upgrade dependencies: FastMCP 2.x
+
 ## [0.0.3] - 2025-03-18
 
 ### Fixed

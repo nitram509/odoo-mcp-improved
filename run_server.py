@@ -63,7 +63,10 @@ def main() -> int:
 
         # Run server in stdio mode like the official examples
         logger.info("Starting Odoo MCP server with stdio transport...")
-        mcp.run(transport="streamable-http")
+        mcp.run(transport="streamable-http",
+                # FIXME make configureable
+                host="0.0.0.0",
+                port=8081)
         logger.info("MCP server stopped normally")
         return 0
 
