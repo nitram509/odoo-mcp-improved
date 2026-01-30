@@ -46,7 +46,7 @@ def search_holidays(
     Returns:
         SearchHolidaysResponse:  Object containing the search results.
     """
-    odoo = ctx.request_context.lifespan_context.odoo
+    odoo = ctx.request_context.lifespan_context.odoo_client
 
     # Validate date format using datetime
     try:

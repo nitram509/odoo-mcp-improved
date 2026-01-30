@@ -31,7 +31,7 @@ def register_purchase_tools(mcp: FastMCP) -> None:
         Returns:
             Diccionario con resultados de la búsqueda
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Construir dominio de búsqueda
@@ -104,7 +104,7 @@ def register_purchase_tools(mcp: FastMCP) -> None:
         Returns:
             Respuesta con el resultado de la operación
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Preparar valores para la orden
@@ -166,7 +166,7 @@ def register_purchase_tools(mcp: FastMCP) -> None:
         Returns:
             Diccionario con resultados del análisis
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Validar fechas

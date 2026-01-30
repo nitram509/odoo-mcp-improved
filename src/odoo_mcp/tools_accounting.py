@@ -31,7 +31,7 @@ def register_accounting_tools(mcp: FastMCP) -> None:
         Returns:
             Diccionario con resultados de la búsqueda
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Construir dominio de búsqueda
@@ -115,7 +115,7 @@ def register_accounting_tools(mcp: FastMCP) -> None:
         Returns:
             Respuesta con el resultado de la operación
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Verificar que el debe y el haber cuadran
@@ -193,7 +193,7 @@ def register_accounting_tools(mcp: FastMCP) -> None:
         Returns:
             Diccionario con los ratios calculados
         """
-        odoo = ctx.request_context.lifespan_context.odoo
+        odoo = ctx.request_context.lifespan_context.odoo_client
 
         try:
             # Validar fechas

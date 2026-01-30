@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import Any, AsyncIterator, Dict, List, Optional
 
 from fastmcp import FastMCP, Context
-from fastmcp.server.middleware.timing import TimingMiddleware
 
 from .odoo_client import OdooClient
 from .odoo_config import get_odoo_client
@@ -21,7 +20,7 @@ from .tools_sales import register_sales_tools
 
 @dataclass
 class AppContext:
-    odoo: OdooClient
+    odoo_client: OdooClient
 
 
 @asynccontextmanager
@@ -33,7 +32,7 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
     odoo_client = get_odoo_client()
 
     try:
-        yield AppContext(odoo=odoo_client)
+        yield AppContext(odoo_client=odoo_client)
     finally:
         # No cleanup needed for Odoo client
         pass
@@ -99,7 +98,7 @@ def execute_method(
         - result: Result of the method (if success)
         - error: Error message (if failure)
     """
-    odoo = ctx.request_context.lifespan_context.odoo
+    odoo = ctx.request_context.lifespan_context.odoo_client
     args = args or []
     kwargs = kwargs or {}
 

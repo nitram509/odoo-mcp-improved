@@ -37,7 +37,7 @@ def search_employee(
     Returns:
         SearchEmployeeResponse containing results or error information.
     """
-    odoo = ctx.request_context.lifespan_context.odoo
+    odoo = ctx.request_context.lifespan_context.odoo_client
     model = "hr.employee"
     method = "name_search"
 

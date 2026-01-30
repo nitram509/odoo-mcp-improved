@@ -7,35 +7,6 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
-# Modelos para Ventas
-class SalesOrderLineCreate(BaseModel):
-    """Línea de pedido de venta para creación"""
-    product_id: int = Field(description="ID del producto")
-    product_uom_qty: float = Field(description="Cantidad")
-    price_unit: Optional[float] = Field(None, description="Precio unitario (opcional, Odoo puede calcularlo)")
-
-class SalesOrderCreate(BaseModel):
-    """Datos para crear un pedido de venta"""
-    partner_id: int = Field(description="ID del cliente")
-    order_lines: List[SalesOrderLineCreate] = Field(description="Líneas del pedido")
-    date_order: Optional[str] = Field(None, description="Fecha del pedido (YYYY-MM-DD)")
-
-class SalesOrderFilter(BaseModel):
-    """Filtros para búsqueda de pedidos de venta"""
-    partner_id: Optional[int] = Field(None, description="Filtrar por cliente ID")
-    date_from: Optional[str] = Field(None, description="Fecha inicial (YYYY-MM-DD)")
-    date_to: Optional[str] = Field(None, description="Fecha final (YYYY-MM-DD)")
-    state: Optional[str] = Field(None, description="Estado del pedido (e.g., 'sale', 'draft', 'done')")
-    limit: Optional[int] = Field(20, description="Límite de resultados")
-    offset: Optional[int] = Field(0, description="Offset para paginación")
-    order: Optional[str] = Field(None, description="Criterio de ordenación (e.g., 'date_order DESC')")
-
-class SalesPerformanceInput(BaseModel):
-    """Parámetros para análisis de rendimiento de ventas"""
-    date_from: str = Field(description="Fecha inicial (YYYY-MM-DD)")
-    date_to: str = Field(description="Fecha final (YYYY-MM-DD)")
-    group_by: Optional[str] = Field(None, description="Agrupar por ('product', 'customer', 'salesperson')")
-
 # Modelos para Compras
 class PurchaseOrderLineCreate(BaseModel):
     """Línea de orden de compra para creación"""
