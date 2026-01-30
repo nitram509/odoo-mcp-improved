@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any, AsyncIterator, Dict, List, Optional
 
 from fastmcp import FastMCP, Context
+from fastmcp.server.middleware.timing import TimingMiddleware
 
 from .odoo_client import OdooClient
 from .odoo_config import get_odoo_client
@@ -99,10 +100,10 @@ def execute_method(
         - error: Error message (if failure)
     """
     odoo = ctx.request_context.lifespan_context.odoo
-    try:
-        args = args or []
-        kwargs = kwargs or {}
+    args = args or []
+    kwargs = kwargs or {}
 
+    try:
         # Special handling for search methods like search, search_count, search_read
         search_methods = ["search", "search_count", "search_read"]
         if method in search_methods and args:
@@ -209,7 +210,7 @@ def execute_method(
         result = odoo.execute_method(model, method, *args, **kwargs)
         return {"success": True, "result": result}
     except Exception as e:
-        logging.error(f"Tool 'execute_method'", e)
+        logging.warning(f"execute_method(model={model}, method={method}, args={args}, kwargs={kwargs})", e)
         return {"success": False, "error": str(e)}
 
 
