@@ -9,50 +9,53 @@ import re
 import socket
 import urllib.parse
 import xmlrpc.client
-from typing import Dict
+from dataclasses import dataclass
+from typing import Dict, Optional
 
 from odoo_mcp.transport import RedirectTransport
+
+
+@dataclass(init=False)
+class OdooConfig:
+    url: str
+    db: str
+    username: str
+    password: str
+    timeout: Optional[int] = 30
+    verify_ssl: Optional[bool] = True
+
+    def __init__(self, url, db, username, password, timeout=None, verify_ssl=None):
+        super().__init__()
+        self.db = db
+        self.url = url
+        self.username = username
+        self.password = password
+        if timeout is not None:
+            self.timeout = timeout
+        if verify_ssl is not None:
+            self.verify_ssl = verify_ssl
 
 
 class OdooClient:
     """Client for interacting with Odoo via XML-RPC"""
 
-    def __init__(
-            self,
-            url,
-            db,
-            username,
-            password,
-            timeout=10,
-            verify_ssl=True,
-    ):
-        """
-        Initialize the Odoo client with connection parameters
-
-        Args:
-            url: Odoo server URL (with or without protocol)
-            db: Database name
-            username: Login username
-            password: Login password
-            timeout: Connection timeout in seconds
-            verify_ssl: Whether to verify SSL certificates
-        """
+    def __init__(self, config: OdooConfig):
         # Ensure URL has a protocol
-        if not re.match(r"^https?://", url):
-            url = f"http://{url}"
+        if not re.match(r"^https?://", config.url):
+            config.url = f"http://{config.url}"
 
         # Remove trailing slash from URL if present
-        url = url.rstrip("/")
+        url = config.url.rstrip("/")
 
         self.url = url
-        self.db = db
-        self.username = username
-        self.password = password
+        self.db = config.db
+        self.username = config.username
+        self.password = config.password
         self.uid = None
 
         # Set timeout and SSL verification
-        self.timeout = timeout
-        self.verify_ssl = verify_ssl
+        self.timeout = config.timeout
+        self.verify_ssl = config.verify_ssl
 
         # Setup connections
         self._common = None
@@ -81,20 +84,9 @@ class OdooClient:
         if not self.uid:
             raise ValueError("Authentication failed: Invalid username or password")
 
-    def execute_method(self, model, method, *args, **kwargs):
-        """
-        Execute an arbitrary method on a model
-
-        Args:
-            model: The model name (e.g., 'res.partner')
-            method: Method name to execute
-            *args: Positional arguments to pass to the method
-            **kwargs: Keyword arguments to pass to the method
-
-        Returns:
-            Result of the method execution
-        """
-        return self._models.execute_kw(self.db, self.uid, self.password, model, method, args, kwargs)
+    def execute_method(self, odoo_model, method, *args, **kwargs):
+        """Execute an arbitrary method on a model"""
+        return self._models.execute_kw(self.db, self.uid, self.password, odoo_model, method, args, kwargs)
 
     def get_models(self) -> Dict[str, any]:
         """Get a list of all available models in the system"""
@@ -256,74 +248,3 @@ class OdooClient:
         except Exception as e:
             print(f"Error reading records: {str(e)}", file=os.sys.stderr)
             return []
-
-
-def load_config():
-    """
-    Load Odoo configuration from environment variables or config file
-
-    Returns:
-        dict: Configuration dictionary with url, db, username, password
-    """
-    # Define config file paths to check
-    config_paths = [
-        "./odoo_config.json",
-        os.path.expanduser("~/.config/odoo/config.json"),
-        os.path.expanduser("~/.odoo_config.json"),
-    ]
-
-    # Try environment variables first
-    if all(
-            var in os.environ
-            for var in ["ODOO_URL", "ODOO_DB", "ODOO_USERNAME", "ODOO_PASSWORD"]
-    ):
-        return {
-            "url": os.environ["ODOO_URL"],
-            "db": os.environ["ODOO_DB"],
-            "username": os.environ["ODOO_USERNAME"],
-            "password": os.environ["ODOO_PASSWORD"],
-        }
-
-    # Try to load from file
-    for path in config_paths:
-        expanded_path = os.path.expanduser(path)
-        if os.path.exists(expanded_path):
-            with open(expanded_path, "r") as f:
-                return json.load(f)
-
-    raise FileNotFoundError(
-        "No Odoo configuration found. Please create an odoo_config.json file or set environment variables."
-    )
-
-
-def get_odoo_client():
-    """
-    Get a configured Odoo client instance
-
-    Returns:
-        OdooClient: A configured Odoo client instance
-    """
-    config = load_config()
-
-    # Get additional options from environment variables
-    timeout = int(
-        os.environ.get("ODOO_TIMEOUT", "30")
-    )  # Increase default timeout to 30 seconds
-    verify_ssl = os.environ.get("ODOO_VERIFY_SSL", "1").lower() in ["1", "true", "yes"]
-
-    # Print detailed configuration
-    print("Odoo client configuration:", file=os.sys.stderr)
-    print(f"  URL: {config['url']}", file=os.sys.stderr)
-    print(f"  Database: {config['db']}", file=os.sys.stderr)
-    print(f"  Username: {config['username']}", file=os.sys.stderr)
-    print(f"  Timeout: {timeout}s", file=os.sys.stderr)
-    print(f"  Verify SSL: {verify_ssl}", file=os.sys.stderr)
-
-    return OdooClient(
-        url=config["url"],
-        db=config["db"],
-        username=config["username"],
-        password=config["password"],
-        timeout=timeout,
-        verify_ssl=verify_ssl,
-    )

@@ -9,7 +9,8 @@ from fastmcp import FastMCP, Context
 from pydantic import BaseModel, Field
 
 from .extensions import register_all_extensions
-from .odoo_client import OdooClient, get_odoo_client
+from .odoo_client import OdooClient
+from .odoo_config import get_odoo_client
 
 
 @dataclass
@@ -90,8 +91,9 @@ def get_record(model_name: str, record_id: str) -> str:
         record_id: ID of the record
     """
     odoo_client = get_odoo_client()
+    record_id_int = int(record_id)
+    logging.info(f"get_record(model={model_name}, id={record_id_int})")
     try:
-        record_id_int = int(record_id)
         record = odoo_client.read_records(model_name, [record_id_int])
         if not record:
             return json.dumps(
