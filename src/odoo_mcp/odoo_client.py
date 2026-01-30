@@ -2,11 +2,8 @@
 Odoo XML-RPC client for MCP server integration
 """
 
-import json
 import logging
-import os
 import re
-import socket
 import urllib.parse
 import xmlrpc.client
 from dataclasses import dataclass
@@ -122,7 +119,7 @@ class OdooClient:
 
             return models_info
         except Exception as e:
-            print(f"Error retrieving models: {str(e)}", file=os.sys.stderr)
+            logging.error(f"get_models()", e)
             return {"model_names": [], "models_details": {}, "error": str(e)}
 
     def get_model_info(self, model_name):
@@ -154,7 +151,7 @@ class OdooClient:
 
             return result[0]
         except Exception as e:
-            print(f"Error retrieving model info: {str(e)}", file=os.sys.stderr)
+            logging.error(f"get_model_info(model_name={model_name})")
             return {"error": str(e)}
 
     def get_model_fields(self, model_name):
@@ -177,7 +174,7 @@ class OdooClient:
             fields = self.execute_method(model_name, "fields_get")
             return fields
         except Exception as e:
-            print(f"Error retrieving fields: {str(e)}", file=os.sys.stderr)
+            logging.error(f"get_model_fields(model_name={model_name})", e)
             return {"error": str(e)}
 
     def search_read(
@@ -246,5 +243,5 @@ class OdooClient:
             result = self.execute_method(model_name, "read", ids, **kwargs)
             return result
         except Exception as e:
-            print(f"Error reading records: {str(e)}", file=os.sys.stderr)
+            logging.error(f"read_records(model_name={model_name}, ids={ids}, fields={fields})", e)
             return []

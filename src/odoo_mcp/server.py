@@ -44,6 +44,7 @@ mcp = FastMCP(
     lifespan=app_lifespan,
 )
 
+
 # ----- Pydantic models for type safety -----
 
 # TODO: ist not used?
@@ -203,7 +204,7 @@ def execute_method(
                 args = normalized_args
 
                 # Log for debugging
-                print(f"Executing {method} with normalized domain: {domain_list}")
+                logging.info(f"Executing {method} with normalized domain: {domain_list}")
 
         result = odoo.execute_method(model, method, *args, **kwargs)
         return {"success": True, "result": result}
