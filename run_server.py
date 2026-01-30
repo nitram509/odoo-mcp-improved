@@ -34,7 +34,7 @@ def setup_logging():
     file_handler.setLevel(logging.DEBUG)
 
     # Format for both handlers
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(filename)s - %(message)s')
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
@@ -65,9 +65,11 @@ def main() -> int:
 
     try:
         mcp.run(transport="streamable-http",
-                # FIXME make configureable
+                # FIXME make configurable
+                show_banner=False,
                 host="0.0.0.0",
                 port=8081)
+
         logger.info("MCP server stopped normally")
         return 0
     except Exception as e:
