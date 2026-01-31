@@ -1,11 +1,11 @@
 
-# Odoo MCP Improved
+# Odoo Superior MCP
 
 ![demo.gif](demo.gif)
 
 <div align="center">
 
-![Odoo MCP Improved Logo](https://img.shields.io/badge/Odoo%20MCP-Improved-brightgreen?style=for-the-badge&logo=odoo)
+![Odoo Superior MCP Logo](https://img.shields.io/badge/Odoo%20Superior%20MCP-brightgreen?style=for-the-badge&logo=odoo)
 
 [![PyPI version](https://img.shields.io/badge/pypi-v1.1.0-blue.svg)](https://pypi.org/project/odoo-superior-mcp/)
 [![Python Versions](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue)](https://pypi.org/project/odoo-superior-mcp/)
@@ -36,7 +36,7 @@ Based on `odoo-mcp-enhanced` but with up-to-date libraries, using Python 3.12, a
 
 ## 🔍 Overview
 
-Odoo MCP Improved is a comprehensive implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) for Odoo ERP systems. It provides a bridge between large language models like Claude and your Odoo instance, enabling AI assistants to interact directly with your business data and processes.
+Odoo Superior MCP is a comprehensive implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) for Odoo ERP systems. It provides a bridge between large language models like Claude and your Odoo instance, enabling AI assistants to interact directly with your business data and processes.
 
 This extended version enhances the original MCP-Odoo implementation with advanced tools and resources for sales, purchases, inventory management, and accounting, making it a powerful solution for AI-assisted business operations.
 
@@ -199,7 +199,7 @@ Add the following to your `claude_desktop_config.json`:
 
 ## 💬 Prompts
 
-Odoo MCP Improved includes specialized prompts for different business scenarios:
+Odoo Superior MCP includes specialized prompts for different business scenarios:
 
 ### Sales Analysis Prompts
 - Sales trend analysis
@@ -237,6 +237,6 @@ This repo is extended from [mcp-odoo](https://github.com/tuanle96/mcp-odoo) - [L
 
 <div align="center">
 
-**Odoo MCP Improved** - Empowering AI assistants with comprehensive Odoo ERP capabilities
+**Odoo Superior MCP** - Empowering AI assistants with comprehensive Odoo ERP capabilities
 
 </div>
