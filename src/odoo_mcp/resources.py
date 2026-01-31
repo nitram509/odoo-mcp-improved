@@ -9,7 +9,7 @@ from odoo_mcp.odoo_config import get_odoo_client
 def register_all_resources(mcp: FastMCP) -> None:
     mcp.resource(
         "odoo://models", description="List all available models in the Odoo system"
-    )(get_models)
+    )(list_all_available_models)
     mcp.resource(
         "odoo://model/{model_name}",
         description="Get detailed information about a specific model including fields",
@@ -21,17 +21,16 @@ def register_all_resources(mcp: FastMCP) -> None:
     mcp.resource(
         "odoo://search/{model_name}/{domain}",
         description="Search for records matching the domain",
-    )(search_records_resource)
+    )(search_records_that_match_a_domain)
 
 
-def get_models() -> str:
-    """Lists all available models in the Odoo system"""
+def list_all_available_models() -> str:
     odoo_client = get_odoo_client()
     try:
         models = odoo_client.get_models()
         return json.dumps(models, indent=2)
     except Exception as e:
-        logging.error("get_models()", e)
+        logging.error("list_all_available_models()", e)
         return json.dumps({"error": str(e)}, indent=2)
 
 
@@ -59,8 +58,6 @@ def get_model_info(model_name: str) -> str:
 
 def get_record(model_name: str, record_id: str) -> str:
     """
-    Get a specific record by ID
-
     Parameters:
         model_name: Name of the Odoo model (e.g., 'res.partner')
         record_id: ID of the record
@@ -80,10 +77,8 @@ def get_record(model_name: str, record_id: str) -> str:
         return json.dumps({"error": str(e)}, indent=2)
 
 
-def search_records_resource(model_name: str, domain: str) -> str:
+def search_records_that_match_a_domain(model_name: str, domain: str) -> str:
     """
-    Search for records that match a domain
-
     Parameters:
         model_name: Name of the Odoo model (e.g., 'res.partner')
         domain: Search domain in JSON format (e.g., '[["name", "ilike", "test"]]')

@@ -13,15 +13,17 @@ from odoo_mcp.transport import RedirectTransport
 
 
 @dataclass(init=False)
-class OdooConfig:
+class OdooSuperiorMcpConfig:
     url: str
     db: str
     username: str
     password: str
     timeout: Optional[int] = 30
     verify_ssl: Optional[bool] = True
+    mcp_host: str = "127.0.0.1"
+    mcp_port: int = "8081"
 
-    def __init__(self, url, db, username, password, timeout=None, verify_ssl=None):
+    def __init__(self, url, db, username, password, timeout=None, verify_ssl=None, mcp_host=None, mcp_port=None):
         super().__init__()
         self.db = db
         self.url = url
@@ -31,12 +33,17 @@ class OdooConfig:
             self.timeout = timeout
         if verify_ssl is not None:
             self.verify_ssl = verify_ssl
+        if mcp_host is not None:
+            self.mcp_host = mcp_host
+        if mcp_port is not None:
+            self.mcp_port = mcp_port
+
 
 
 class OdooClient:
     """Client for interacting with Odoo via XML-RPC"""
 
-    def __init__(self, config: OdooConfig):
+    def __init__(self, config: OdooSuperiorMcpConfig):
         # Ensure URL has a protocol
         if not re.match(r"^https?://", config.url):
             config.url = f"http://{config.url}"
