@@ -13,6 +13,8 @@
 
 **Enhanced Model Context Protocol (MCP) server for Odoo ERP with advanced tools for sales, purchases, inventory and accounting**
 
+Based on `odoo-mcp-enhanced` but with up-to-date libraries, using Python 3.12, and improved logging and configuration options.
+
 </div>
 
 ---
