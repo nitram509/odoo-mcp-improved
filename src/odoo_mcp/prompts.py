@@ -2,18 +2,26 @@ from fastmcp import FastMCP
 
 
 def register_all_prompts(mcp: FastMCP) -> None:
-    mcp.prompt(sales_analysis_prompt,
-               name="sales_analysis",
-               description="Analyze sales for a specific period and provide key insights")
-    mcp.prompt(purchase_analysis_prompt,
-               name="purchase_analysis",
-               description="Analyze purchase orders and supplier performance")
-    mcp.prompt(inventory_management_prompt,
-               name="inventory_management",
-               description="Analyzes inventory status and provides recommendations")
-    mcp.prompt(financial_analysis_prompt,
-               name="financial_analysis",
-               description="Perform a basic financial analysis")
+    mcp.prompt(
+        sales_analysis_prompt,
+        name="sales_analysis",
+        description="Analyze sales for a specific period and provide key insights",
+    )
+    mcp.prompt(
+        purchase_analysis_prompt,
+        name="purchase_analysis",
+        description="Analyze purchase orders and supplier performance",
+    )
+    mcp.prompt(
+        inventory_management_prompt,
+        name="inventory_management",
+        description="Analyzes inventory status and provides recommendations",
+    )
+    mcp.prompt(
+        financial_analysis_prompt,
+        name="financial_analysis",
+        description="Perform a basic financial analysis",
+    )
 
 
 def sales_analysis_prompt() -> str:

@@ -10,24 +10,26 @@ from odoo_mcp.odoo_config import get_odoo_client
 from odoo_mcp.tools_sales import SalesOrderFilter
 
 # Añadir el directorio src al path para poder importar odoo_mcp
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.odoo_mcp.models import (
     PurchaseOrderFilter,
     ProductAvailabilityInput,
     JournalEntryFilter,
-    FinancialRatioInput
+    FinancialRatioInput,
 )
+
 
 class ValidationContext:
     """Contexto simulado para pruebas"""
 
     class RequestContext:
         def __init__(self, odoo_client):
-            self.lifespan_context = type('LifespanContext', (), {'odoo': odoo_client})
+            self.lifespan_context = type("LifespanContext", (), {"odoo": odoo_client})
 
     def __init__(self, odoo_client):
         self.request_context = self.RequestContext(odoo_client)
+
 
 def run_validation():
     """Ejecuta pruebas de validación para todas las nuevas funcionalidades"""
@@ -55,14 +57,16 @@ def run_validation():
         filter_params = SalesOrderFilter(
             date_from=(datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d"),
             date_to=datetime.now().strftime("%Y-%m-%d"),
-            limit=5
+            limit=5,
         )
 
         # Ejecutar búsqueda
         result = search_sales_orders(ctx, filter_params)
 
         if result.get("success"):
-            print(f"✅ search_sales_orders: Encontradas {result['result']['count']} órdenes de venta")
+            print(
+                f"✅ search_sales_orders: Encontradas {result['result']['count']} órdenes de venta"
+            )
         else:
             print(f"❌ search_sales_orders: {result.get('error', 'Error desconocido')}")
     except Exception as e:
@@ -78,16 +82,20 @@ def run_validation():
         filter_params = PurchaseOrderFilter(
             date_from=(datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d"),
             date_to=datetime.now().strftime("%Y-%m-%d"),
-            limit=5
+            limit=5,
         )
 
         # Ejecutar búsqueda
         result = search_purchase_orders(ctx, filter_params)
 
         if result.get("success"):
-            print(f"✅ search_purchase_orders: Encontradas {result['result']['count']} órdenes de compra")
+            print(
+                f"✅ search_purchase_orders: Encontradas {result['result']['count']} órdenes de compra"
+            )
         else:
-            print(f"❌ search_purchase_orders: {result.get('error', 'Error desconocido')}")
+            print(
+                f"❌ search_purchase_orders: {result.get('error', 'Error desconocido')}"
+            )
     except Exception as e:
         print(f"❌ Error al validar search_purchase_orders: {str(e)}")
 
@@ -99,29 +107,30 @@ def run_validation():
 
         # Obtener algunos IDs de productos
         products = odoo_client.search_read(
-            "product.product",
-            [("type", "=", "product")],
-            fields=["id"],
-            limit=3
+            "product.product", [("type", "=", "product")], fields=["id"], limit=3
         )
 
         if products:
             product_ids = [p["id"] for p in products]
 
             # Crear parámetros de prueba
-            params = ProductAvailabilityInput(
-                product_ids=product_ids
-            )
+            params = ProductAvailabilityInput(product_ids=product_ids)
 
             # Ejecutar verificación
             result = check_product_availability(ctx, params)
 
             if result.get("success"):
-                print(f"✅ check_product_availability: Verificados {len(result['result']['products'])} productos")
+                print(
+                    f"✅ check_product_availability: Verificados {len(result['result']['products'])} productos"
+                )
             else:
-                print(f"❌ check_product_availability: {result.get('error', 'Error desconocido')}")
+                print(
+                    f"❌ check_product_availability: {result.get('error', 'Error desconocido')}"
+                )
         else:
-            print("⚠️ No se encontraron productos para validar check_product_availability")
+            print(
+                "⚠️ No se encontraron productos para validar check_product_availability"
+            )
     except Exception as e:
         print(f"❌ Error al validar check_product_availability: {str(e)}")
 
@@ -135,16 +144,20 @@ def run_validation():
         filter_params = JournalEntryFilter(
             date_from=(datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d"),
             date_to=datetime.now().strftime("%Y-%m-%d"),
-            limit=5
+            limit=5,
         )
 
         # Ejecutar búsqueda
         result = search_journal_entries(ctx, filter_params)
 
         if result.get("success"):
-            print(f"✅ search_journal_entries: Encontrados {result['result']['count']} asientos contables")
+            print(
+                f"✅ search_journal_entries: Encontrados {result['result']['count']} asientos contables"
+            )
         else:
-            print(f"❌ search_journal_entries: {result.get('error', 'Error desconocido')}")
+            print(
+                f"❌ search_journal_entries: {result.get('error', 'Error desconocido')}"
+            )
     except Exception as e:
         print(f"❌ Error al validar search_journal_entries: {str(e)}")
 
@@ -155,16 +168,20 @@ def run_validation():
         params = FinancialRatioInput(
             date_from=(datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d"),
             date_to=datetime.now().strftime("%Y-%m-%d"),
-            ratios=["liquidity", "profitability", "debt"]
+            ratios=["liquidity", "profitability", "debt"],
         )
 
         # Ejecutar análisis
         result = analyze_financial_ratios(ctx, params)
 
         if result.get("success"):
-            print(f"✅ analyze_financial_ratios: Análisis completado con {len(result['result']['ratios'])} ratios")
+            print(
+                f"✅ analyze_financial_ratios: Análisis completado con {len(result['result']['ratios'])} ratios"
+            )
         else:
-            print(f"❌ analyze_financial_ratios: {result.get('error', 'Error desconocido')}")
+            print(
+                f"❌ analyze_financial_ratios: {result.get('error', 'Error desconocido')}"
+            )
     except Exception as e:
         print(f"❌ Error al validar analyze_financial_ratios: {str(e)}")
 
@@ -172,25 +189,25 @@ def run_validation():
     print("\n=== Validando recursos ===")
 
     try:
-        from src.odoo_mcp.resources import register_sales_resources
+
         print("✅ Recursos de ventas importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de ventas: {str(e)}")
 
     try:
-        from src.odoo_mcp.resources import register_purchase_resources
+
         print("✅ Recursos de compras importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de compras: {str(e)}")
 
     try:
-        from src.odoo_mcp.resources import register_inventory_resources
+
         print("✅ Recursos de inventario importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de inventario: {str(e)}")
 
     try:
-        from src.odoo_mcp.resources import register_accounting_resources
+
         print("✅ Recursos de contabilidad importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de contabilidad: {str(e)}")
@@ -199,7 +216,7 @@ def run_validation():
     print("\n=== Validando prompts ===")
 
     try:
-        from src.odoo_mcp.prompts import register_all_prompts
+
         print("✅ Prompts importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar prompts: {str(e)}")
@@ -214,13 +231,14 @@ def run_validation():
     #     print(f"❌ Error al importar módulo de extensiones: {str(e)}")
 
     try:
-        from src.odoo_mcp.server import mcp
+
         print("✅ Servidor MCP importado correctamente")
     except Exception as e:
         print(f"❌ Error al importar servidor MCP: {str(e)}")
 
     print("\nValidación completada.")
     return True
+
 
 if __name__ == "__main__":
     run_validation()

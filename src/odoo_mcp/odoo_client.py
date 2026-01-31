@@ -68,22 +68,34 @@ class OdooClient:
         """Initialize the XML-RPC connection and authenticate"""
         # Tạo transport với timeout phù hợp
         is_https = self.url.startswith("https")
-        transport = RedirectTransport(timeout=self.timeout, use_https=is_https, verify_ssl=self.verify_ssl)
+        transport = RedirectTransport(
+            timeout=self.timeout, use_https=is_https, verify_ssl=self.verify_ssl
+        )
 
-        self._common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common", transport=transport)
-        self._models = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object", transport=transport)
+        self._common = xmlrpc.client.ServerProxy(
+            f"{self.url}/xmlrpc/2/common", transport=transport
+        )
+        self._models = xmlrpc.client.ServerProxy(
+            f"{self.url}/xmlrpc/2/object", transport=transport
+        )
 
         # Xác thực và lấy user ID
-        logging.info(f"Authenticating with database: {self.db}, username: {self.username}")
-        logging.info(f"Making request to {self.hostname}/xmlrpc/2/common "
-                     f"| Timeout: {self.timeout}s, Verify SSL: {self.verify_ssl}")
+        logging.info(
+            f"Authenticating with database: {self.db}, username: {self.username}"
+        )
+        logging.info(
+            f"Making request to {self.hostname}/xmlrpc/2/common "
+            f"| Timeout: {self.timeout}s, Verify SSL: {self.verify_ssl}"
+        )
         self.uid = self._common.authenticate(self.db, self.username, self.password, {})
         if not self.uid:
             raise ValueError("Authentication failed: Invalid username or password")
 
     def execute_method(self, odoo_model, method, *args, **kwargs):
         """Execute an arbitrary method on a model"""
-        return self._models.execute_kw(self.db, self.uid, self.password, odoo_model, method, args, kwargs)
+        return self._models.execute_kw(
+            self.db, self.uid, self.password, odoo_model, method, args, kwargs
+        )
 
     def get_models(self) -> Dict[str, any]:
         """Get a list of all available models in the system"""
@@ -91,8 +103,12 @@ class OdooClient:
             # First search for model IDs
             model_ids = self.execute_method("ir.model", "search", [])
         except Exception as e:
-            logging.error(f"Error search for model IDs", e)
-            return {"model_names": [], "models_details": {}, "error": "Error search for model IDs"}
+            logging.error("Error search for model IDs", e)
+            return {
+                "model_names": [],
+                "models_details": {},
+                "error": "Error search for model IDs",
+            }
 
         if not model_ids:
             return {
@@ -104,7 +120,9 @@ class OdooClient:
         try:
             # Then read the model data with only the most basic fields
             # that are guaranteed to exist in all Odoo versions
-            result = self.execute_method("ir.model", "read", model_ids, ["model", "name"])
+            result = self.execute_method(
+                "ir.model", "read", model_ids, ["model", "name"]
+            )
 
             # Extract and sort model names alphabetically
             models = sorted([rec["model"] for rec in result])
@@ -119,7 +137,7 @@ class OdooClient:
 
             return models_info
         except Exception as e:
-            logging.error(f"get_models()", e)
+            logging.error("get_models()", e)
             return {"model_names": [], "models_details": {}, "error": str(e)}
 
     def get_model_info(self, model_name):
@@ -178,7 +196,7 @@ class OdooClient:
             return {"error": str(e)}
 
     def search_read(
-            self, model_name, domain, fields=None, offset=None, limit=None, order=None
+        self, model_name, domain, fields=None, offset=None, limit=None, order=None
     ):
         """
         Search for records and read their data in a single call
@@ -214,7 +232,7 @@ class OdooClient:
             result = self.execute_method(model_name, "search_read", domain, **kwargs)
             return result
         except Exception as e:
-            logging.error(f"Error in search_read", e)
+            logging.error("Error in search_read", e)
             return []
 
     def read_records(self, model_name, ids, fields=None):
@@ -243,5 +261,7 @@ class OdooClient:
             result = self.execute_method(model_name, "read", ids, **kwargs)
             return result
         except Exception as e:
-            logging.error(f"read_records(model_name={model_name}, ids={ids}, fields={fields})", e)
+            logging.error(
+                f"read_records(model_name={model_name}, ids={ids}, fields={fields})", e
+            )
             return []

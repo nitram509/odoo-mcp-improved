@@ -23,9 +23,9 @@ class SearchEmployeeResponse(BaseModel):
 
 
 def search_employee(
-        ctx: Context,
-        name: str,
-        limit: int = 20,
+    ctx: Context,
+    name: str,
+    limit: int = 20,
 ) -> SearchEmployeeResponse:
     """
     Search for employees by name using Odoo's name_search method.

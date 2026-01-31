@@ -7,14 +7,21 @@ from odoo_mcp.odoo_config import get_odoo_client
 
 
 def register_all_resources(mcp: FastMCP) -> None:
-    mcp.resource("odoo://models",
-                 description="List all available models in the Odoo system")(get_models)
-    mcp.resource("odoo://model/{model_name}",
-                 description="Get detailed information about a specific model including fields")(get_model_info)
-    mcp.resource("odoo://record/{model_name}/{record_id}",
-                 description="Get detailed information of a specific record by ID")(get_record)
-    mcp.resource("odoo://search/{model_name}/{domain}",
-                 description="Search for records matching the domain")(search_records_resource)
+    mcp.resource(
+        "odoo://models", description="List all available models in the Odoo system"
+    )(get_models)
+    mcp.resource(
+        "odoo://model/{model_name}",
+        description="Get detailed information about a specific model including fields",
+    )(get_model_info)
+    mcp.resource(
+        "odoo://record/{model_name}/{record_id}",
+        description="Get detailed information of a specific record by ID",
+    )(get_record)
+    mcp.resource(
+        "odoo://search/{model_name}/{domain}",
+        description="Search for records matching the domain",
+    )(search_records_resource)
 
 
 def get_models() -> str:
@@ -94,5 +101,7 @@ def search_records_resource(model_name: str, domain: str) -> str:
 
         return json.dumps(results, indent=2)
     except Exception as e:
-        logging.error(f"search_records_resource(model={model_name}, domain={domain})", e)
+        logging.error(
+            f"search_records_resource(model={model_name}, domain={domain})", e
+        )
         return json.dumps({"error": str(e)}, indent=2)

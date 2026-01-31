@@ -9,7 +9,7 @@ class RedirectTransport(xmlrpc.client.Transport):
     """Transport that adds timeout, SSL verification, and redirect handling"""
 
     def __init__(
-            self, timeout=10, use_https=True, verify_ssl=True, max_redirects=5, proxy=None
+        self, timeout=10, use_https=True, verify_ssl=True, max_redirects=5, proxy=None
     ):
         super().__init__()
         self.timeout = timeout
@@ -52,7 +52,7 @@ class RedirectTransport(xmlrpc.client.Transport):
                 return super().request(host, handler, request_body, verbose)
             except xmlrpc.client.ProtocolError as err:
                 if err.errcode in (301, 302, 303, 307, 308) and err.headers.get(
-                        "location"
+                    "location"
                 ):
                     redirects += 1
                     location = err.headers.get("location")

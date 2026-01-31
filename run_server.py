@@ -3,6 +3,7 @@
 Standalone script to run the Odoo MCP server
 Uses the same approach as in the official MCP SDK examples
 """
+
 import datetime
 import logging
 import os
@@ -34,7 +35,9 @@ def setup_logging():
     file_handler.setLevel(logging.DEBUG)
 
     # Format for both handlers
-    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(filename)s - %(message)s')
+    formatter = logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(filename)s - %(message)s"
+    )
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
@@ -46,7 +49,7 @@ def setup_logging():
 
 
 def main() -> int:
-    """ Run the MCP server"""
+    """Run the MCP server"""
     logger = setup_logging()
 
     logger.info("=== ODOO MCP SERVER STARTING ===")
@@ -64,11 +67,13 @@ def main() -> int:
     logger.info("Starting Odoo MCP server with stdio transport...")
 
     try:
-        mcp.run(transport="streamable-http",
-                # FIXME make configurable
-                show_banner=False,
-                host="0.0.0.0",
-                port=8081)
+        mcp.run(
+            transport="streamable-http",
+            # FIXME make configurable
+            show_banner=False,
+            host="0.0.0.0",
+            port=8081,
+        )
 
         logger.info("MCP server stopped normally")
         return 0

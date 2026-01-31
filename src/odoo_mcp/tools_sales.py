@@ -1,6 +1,7 @@
 """
 Implementación de herramientas (tools) para ventas en MCP-Odoo
 """
+
 import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
@@ -10,20 +11,29 @@ from pydantic import BaseModel, Field
 
 
 def register_sales_tools(mcp: FastMCP):
-    mcp.tool(search_sales_orders, description="Busca pedidos de venta con filtros avanzados")
+    mcp.tool(
+        search_sales_orders, description="Busca pedidos de venta con filtros avanzados"
+    )
     mcp.tool(create_sales_order, description="Crear un nuevo pedido de venta")
-    mcp.tool(analyze_sales_performance, description="Analiza el rendimiento de ventas en un período")
+    mcp.tool(
+        analyze_sales_performance,
+        description="Analiza el rendimiento de ventas en un período",
+    )
 
 
 class SalesOrderLineCreate(BaseModel):
     """Línea de pedido de venta para creación"""
+
     product_id: int = Field(description="ID del producto")
     product_uom_qty: float = Field(description="Cantidad")
-    price_unit: Optional[float] = Field(None, description="Precio unitario (opcional, Odoo puede calcularlo)")
+    price_unit: Optional[float] = Field(
+        None, description="Precio unitario (opcional, Odoo puede calcularlo)"
+    )
 
 
 class SalesOrderCreate(BaseModel):
     """Datos para crear un pedido de venta"""
+
     partner_id: int = Field(description="ID del cliente")
     order_lines: List[SalesOrderLineCreate] = Field(description="Líneas del pedido")
     date_order: Optional[str] = Field(None, description="Fecha del pedido (YYYY-MM-DD)")
@@ -31,20 +41,28 @@ class SalesOrderCreate(BaseModel):
 
 class SalesOrderFilter(BaseModel):
     """Filtros para búsqueda de pedidos de venta"""
+
     partner_id: Optional[int] = Field(None, description="Filtrar por cliente ID")
     date_from: Optional[str] = Field(None, description="Fecha inicial (YYYY-MM-DD)")
     date_to: Optional[str] = Field(None, description="Fecha final (YYYY-MM-DD)")
-    state: Optional[str] = Field(None, description="Estado del pedido (e.g., 'sale', 'draft', 'done')")
+    state: Optional[str] = Field(
+        None, description="Estado del pedido (e.g., 'sale', 'draft', 'done')"
+    )
     limit: Optional[int] = Field(20, description="Límite de resultados")
     offset: Optional[int] = Field(0, description="Offset para paginación")
-    order: Optional[str] = Field(None, description="Criterio de ordenación (e.g., 'date_order DESC')")
+    order: Optional[str] = Field(
+        None, description="Criterio de ordenación (e.g., 'date_order DESC')"
+    )
 
 
 class SalesPerformanceInput(BaseModel):
     """Parámetros para análisis de rendimiento de ventas"""
+
     date_from: str = Field(description="Fecha inicial (YYYY-MM-DD)")
     date_to: str = Field(description="Fecha final (YYYY-MM-DD)")
-    group_by: Optional[str] = Field(None, description="Agrupar por ('product', 'customer', 'salesperson')")
+    group_by: Optional[str] = Field(
+        None, description="Agrupar por ('product', 'customer', 'salesperson')"
+    )
 
 
 def search_sales_orders(ctx: Context, filters: SalesOrderFilter) -> Dict[str, Any]:
@@ -71,22 +89,34 @@ def search_sales_orders(ctx: Context, filters: SalesOrderFilter) -> Dict[str, An
                 datetime.strptime(filters.date_from, "%Y-%m-%d")
                 domain.append(("date_order", ">=", filters.date_from))
             except ValueError:
-                return {"success": False, "error": f"Formato de fecha inválido: {filters.date_from}. Use YYYY-MM-DD."}
+                return {
+                    "success": False,
+                    "error": f"Formato de fecha inválido: {filters.date_from}. Use YYYY-MM-DD.",
+                }
 
         if filters.date_to:
             try:
                 datetime.strptime(filters.date_to, "%Y-%m-%d")
                 domain.append(("date_order", "<=", filters.date_to))
             except ValueError:
-                return {"success": False, "error": f"Formato de fecha inválido: {filters.date_to}. Use YYYY-MM-DD."}
+                return {
+                    "success": False,
+                    "error": f"Formato de fecha inválido: {filters.date_to}. Use YYYY-MM-DD.",
+                }
 
         if filters.state:
             domain.append(("state", "=", filters.state))
 
         # Campos a recuperar
         fields = [
-            "name", "partner_id", "date_order", "amount_total",
-            "state", "invoice_status", "user_id", "order_line"
+            "name",
+            "partner_id",
+            "date_order",
+            "amount_total",
+            "state",
+            "invoice_status",
+            "user_id",
+            "order_line",
         ]
 
         # Ejecutar búsqueda
@@ -96,7 +126,7 @@ def search_sales_orders(ctx: Context, filters: SalesOrderFilter) -> Dict[str, An
             fields=fields,
             limit=filters.limit,
             offset=filters.offset,
-            order=filters.order
+            order=filters.order,
         )
 
         # Obtener el conteo total sin límite para paginación
@@ -107,12 +137,12 @@ def search_sales_orders(ctx: Context, filters: SalesOrderFilter) -> Dict[str, An
             "result": {
                 "count": len(orders),
                 "total_count": total_count,
-                "orders": orders
-            }
+                "orders": orders,
+            },
         }
 
     except Exception as e:
-        logging.error(f"Tool 'search_sales_orders'", e)
+        logging.error("Tool 'search_sales_orders'", e)
         return {"success": False, "error": str(e)}
 
 
@@ -130,25 +160,27 @@ def create_sales_order(ctx: Context, order: SalesOrderCreate) -> Dict[str, Any]:
 
     try:
         # Preparar valores para el pedido
-        order_vals = {
-            "partner_id": order.partner_id,
-            "order_line": []
-        }
+        order_vals = {"partner_id": order.partner_id, "order_line": []}
 
         if order.date_order:
             try:
                 datetime.strptime(order.date_order, "%Y-%m-%d")
                 order_vals["date_order"] = order.date_order
             except ValueError:
-                return {"success": False, "error": f"Formato de fecha inválido: {order.date_order}. Use YYYY-MM-DD."}
+                return {
+                    "success": False,
+                    "error": f"Formato de fecha inválido: {order.date_order}. Use YYYY-MM-DD.",
+                }
 
         # Preparar líneas de pedido
         for line in order.order_lines:
             line_vals = [
-                0, 0, {
+                0,
+                0,
+                {
                     "product_id": line.product_id,
-                    "product_uom_qty": line.product_uom_qty
-                }
+                    "product_uom_qty": line.product_uom_qty,
+                },
             ]
 
             if line.price_unit is not None:
@@ -164,18 +196,17 @@ def create_sales_order(ctx: Context, order: SalesOrderCreate) -> Dict[str, Any]:
 
         return {
             "success": True,
-            "result": {
-                "order_id": order_id,
-                "order_name": order_info["name"]
-            }
+            "result": {"order_id": order_id, "order_name": order_info["name"]},
         }
 
     except Exception as e:
-        logging.error(f"Tool 'create_sales_order'", e)
+        logging.error("Tool 'create_sales_order'", e)
         return {"success": False, "error": str(e)}
 
 
-def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Dict[str, Any]:
+def analyze_sales_performance(
+    ctx: Context, params: SalesPerformanceInput
+) -> Dict[str, Any]:
     """
     Analiza el rendimiento de ventas en un período específico
 
@@ -193,20 +224,23 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
             datetime.strptime(params.date_from, "%Y-%m-%d")
             datetime.strptime(params.date_to, "%Y-%m-%d")
         except ValueError:
-            return {"success": False, "error": "Formato de fecha inválido. Use YYYY-MM-DD."}
+            return {
+                "success": False,
+                "error": "Formato de fecha inválido. Use YYYY-MM-DD.",
+            }
 
         # Construir dominio para pedidos confirmados
         domain = [
             ("date_order", ">=", params.date_from),
             ("date_order", "<=", params.date_to),
-            ("state", "in", ["sale", "done"])
+            ("state", "in", ["sale", "done"]),
         ]
 
         # Obtener datos de ventas
         sales_data = odoo.search_read(
             "sale.order",
             domain,
-            fields=["name", "partner_id", "date_order", "amount_total", "user_id"]
+            fields=["name", "partner_id", "date_order", "amount_total", "user_id"],
         )
 
         # Calcular período anterior para comparación
@@ -220,13 +254,11 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
         prev_domain = [
             ("date_order", ">=", prev_date_from.strftime("%Y-%m-%d")),
             ("date_order", "<=", prev_date_to.strftime("%Y-%m-%d")),
-            ("state", "in", ["sale", "done"])
+            ("state", "in", ["sale", "done"]),
         ]
 
         prev_sales_data = odoo.search_read(
-            "sale.order",
-            prev_domain,
-            fields=["amount_total"]
+            "sale.order", prev_domain, fields=["amount_total"]
         )
 
         # Calcular totales
@@ -248,20 +280,24 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
                     order_lines = odoo.search_read(
                         "sale.order.line",
                         [("order_id", "in", order_ids)],
-                        fields=["product_id", "product_uom_qty", "price_subtotal"]
+                        fields=["product_id", "product_uom_qty", "price_subtotal"],
                     )
 
                     # Agrupar por producto
                     product_data = {}
                     for line in order_lines:
                         product_id = line["product_id"][0] if line["product_id"] else 0
-                        product_name = line["product_id"][1] if line["product_id"] else "Desconocido"
+                        product_name = (
+                            line["product_id"][1]
+                            if line["product_id"]
+                            else "Desconocido"
+                        )
 
                         if product_id not in product_data:
                             product_data[product_id] = {
                                 "name": product_name,
                                 "quantity": 0,
-                                "amount": 0
+                                "amount": 0,
                             }
 
                         product_data[product_id]["quantity"] += line["product_uom_qty"]
@@ -269,9 +305,7 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
 
                     # Ordenar por monto
                     top_products = sorted(
-                        product_data.items(),
-                        key=lambda x: x[1]["amount"],
-                        reverse=True
+                        product_data.items(), key=lambda x: x[1]["amount"], reverse=True
                     )
 
                     grouped_data["products"] = [
@@ -283,13 +317,15 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
                 customer_data = {}
                 for order in sales_data:
                     customer_id = order["partner_id"][0] if order["partner_id"] else 0
-                    customer_name = order["partner_id"][1] if order["partner_id"] else "Desconocido"
+                    customer_name = (
+                        order["partner_id"][1] if order["partner_id"] else "Desconocido"
+                    )
 
                     if customer_id not in customer_data:
                         customer_data[customer_id] = {
                             "name": customer_name,
                             "order_count": 0,
-                            "amount": 0
+                            "amount": 0,
                         }
 
                     customer_data[customer_id]["order_count"] += 1
@@ -297,9 +333,7 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
 
                 # Ordenar por monto
                 top_customers = sorted(
-                    customer_data.items(),
-                    key=lambda x: x[1]["amount"],
-                    reverse=True
+                    customer_data.items(), key=lambda x: x[1]["amount"], reverse=True
                 )
 
                 grouped_data["customers"] = [
@@ -311,13 +345,15 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
                 salesperson_data = {}
                 for order in sales_data:
                     salesperson_id = order["user_id"][0] if order["user_id"] else 0
-                    salesperson_name = order["user_id"][1] if order["user_id"] else "Desconocido"
+                    salesperson_name = (
+                        order["user_id"][1] if order["user_id"] else "Desconocido"
+                    )
 
                     if salesperson_id not in salesperson_data:
                         salesperson_data[salesperson_id] = {
                             "name": salesperson_name,
                             "order_count": 0,
-                            "amount": 0
+                            "amount": 0,
                         }
 
                     salesperson_data[salesperson_id]["order_count"] += 1
@@ -325,9 +361,7 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
 
                 # Ordenar por monto
                 top_salespersons = sorted(
-                    salesperson_data.items(),
-                    key=lambda x: x[1]["amount"],
-                    reverse=True
+                    salesperson_data.items(), key=lambda x: x[1]["amount"], reverse=True
                 )
 
                 grouped_data["salespersons"] = [
@@ -336,10 +370,7 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
 
         # Preparar resultado
         result = {
-            "period": {
-                "from": params.date_from,
-                "to": params.date_to
-            },
+            "period": {"from": params.date_from, "to": params.date_to},
             "summary": {
                 "order_count": len(sales_data),
                 "total_amount": current_total,
@@ -347,10 +378,10 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
                     "from": prev_date_from.strftime("%Y-%m-%d"),
                     "to": prev_date_to.strftime("%Y-%m-%d"),
                     "order_count": len(prev_sales_data),
-                    "total_amount": previous_total
+                    "total_amount": previous_total,
                 },
-                "percent_change": round(percent_change, 2)
-            }
+                "percent_change": round(percent_change, 2),
+            },
         }
 
         # Añadir datos agrupados si existen
@@ -360,5 +391,5 @@ def analyze_sales_performance(ctx: Context, params: SalesPerformanceInput) -> Di
         return {"success": True, "result": result}
 
     except Exception as e:
-        logging.error(f"Tool 'analyze_sales_performance'", e)
+        logging.error("Tool 'analyze_sales_performance'", e)
         return {"success": False, "error": str(e)}

@@ -77,11 +77,11 @@ mcp = FastMCP(
 
 @mcp.tool(description="Execute a custom method on an Odoo model")
 def execute_method(
-        ctx: Context,
-        model: str,
-        method: str,
-        args: List = None,
-        kwargs: Optional[Dict[str, Any]] = None,
+    ctx: Context,
+    model: str,
+    method: str,
+    args: List = None,
+    kwargs: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Execute a custom method on an Odoo model
@@ -119,9 +119,9 @@ def execute_method(
 
                 # Check if domain is wrapped unnecessarily ([domain] instead of domain)
                 if (
-                        isinstance(domain, list)
-                        and len(domain) == 1
-                        and isinstance(domain[0], list)
+                    isinstance(domain, list)
+                    and len(domain) == 1
+                    and isinstance(domain[0], list)
                 ):
                     # Case [[domain]] - unwrap to [domain]
                     domain = domain[0]
@@ -136,7 +136,7 @@ def execute_method(
                         domain_list = []
                         for cond in conditions:
                             if isinstance(cond, dict) and all(
-                                    k in cond for k in ["field", "operator", "value"]
+                                k in cond for k in ["field", "operator", "value"]
                             ):
                                 domain_list.append(
                                     [cond["field"], cond["operator"], cond["value"]]
@@ -146,7 +146,7 @@ def execute_method(
                     if not domain:
                         domain_list = []
                     elif all(isinstance(item, list) for item in domain) or any(
-                            item in ["&", "|", "!"] for item in domain
+                        item in ["&", "|", "!"] for item in domain
                     ):
                         domain_list = domain
                     elif len(domain) >= 3 and isinstance(domain[0], str):
@@ -157,14 +157,14 @@ def execute_method(
                     try:
                         parsed_domain = json.loads(domain)
                         if (
-                                isinstance(parsed_domain, dict)
-                                and "conditions" in parsed_domain
+                            isinstance(parsed_domain, dict)
+                            and "conditions" in parsed_domain
                         ):
                             conditions = parsed_domain.get("conditions", [])
                             domain_list = []
                             for cond in conditions:
                                 if isinstance(cond, dict) and all(
-                                        k in cond for k in ["field", "operator", "value"]
+                                    k in cond for k in ["field", "operator", "value"]
                                 ):
                                     domain_list.append(
                                         [cond["field"], cond["operator"], cond["value"]]
@@ -190,10 +190,10 @@ def execute_method(
                             continue
 
                         if (
-                                isinstance(cond, list)
-                                and len(cond) == 3
-                                and isinstance(cond[0], str)
-                                and isinstance(cond[1], str)
+                            isinstance(cond, list)
+                            and len(cond) == 3
+                            and isinstance(cond[0], str)
+                            and isinstance(cond[1], str)
                         ):
                             valid_conditions.append(cond)
 
@@ -204,12 +204,17 @@ def execute_method(
                 args = normalized_args
 
                 # Log for debugging
-                logging.info(f"Executing {method} with normalized domain: {domain_list}")
+                logging.info(
+                    f"Executing {method} with normalized domain: {domain_list}"
+                )
 
         result = odoo.execute_method(model, method, *args, **kwargs)
         return {"success": True, "result": result}
     except Exception as e:
-        logging.warning(f"execute_method(model={model}, method={method}, args={args}, kwargs={kwargs})", e)
+        logging.warning(
+            f"execute_method(model={model}, method={method}, args={args}, kwargs={kwargs})",
+            e,
+        )
         return {"success": False, "error": str(e)}
 
 

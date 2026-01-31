@@ -30,10 +30,10 @@ class SearchHolidaysResponse(BaseModel):
 
 
 def search_holidays(
-        ctx: Context,
-        start_date: str,
-        end_date: str,
-        employee_id: Optional[int] = None,
+    ctx: Context,
+    start_date: str,
+    end_date: str,
+    employee_id: Optional[int] = None,
 ) -> SearchHolidaysResponse:
     """
     Searches for holidays within a specified date range.
@@ -88,5 +88,8 @@ def search_holidays(
         return SearchHolidaysResponse(success=True, result=parsed_holidays)
 
     except Exception as e:
-        logging.error(f"employee_id(start_date={start_date}, end_date={end_date}, employee_id={employee_id})", e)
+        logging.error(
+            f"employee_id(start_date={start_date}, end_date={end_date}, employee_id={employee_id})",
+            e,
+        )
         return SearchHolidaysResponse(success=False, error=str(e))
