@@ -23,7 +23,17 @@ class OdooSuperiorMcpConfig:
     mcp_host: str = "127.0.0.1"
     mcp_port: int = "8081"
 
-    def __init__(self, url, db, username, password, timeout=None, verify_ssl=None, mcp_host=None, mcp_port=None):
+    def __init__(
+        self,
+        url,
+        db,
+        username,
+        password,
+        timeout=None,
+        verify_ssl=None,
+        mcp_host=None,
+        mcp_port=None,
+    ):
         super().__init__()
         self.db = db
         self.url = url
@@ -37,7 +47,6 @@ class OdooSuperiorMcpConfig:
             self.mcp_host = mcp_host
         if mcp_port is not None:
             self.mcp_port = mcp_port
-
 
 
 class OdooClient:

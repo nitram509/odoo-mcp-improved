@@ -7,7 +7,7 @@
 
 ![Odoo Superior MCP Logo](https://img.shields.io/badge/Odoo%20Superior%20MCP-brightgreen?style=for-the-badge&logo=odoo)
 
-[![PyPI version](https://img.shields.io/badge/pypi-v1.1.0-blue.svg)](https://pypi.org/project/odoo-superior-mcp/)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.1.1-blue.svg)](https://pypi.org/project/odoo-superior-mcp/)
 [![Python Versions](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue)](https://pypi.org/project/odoo-superior-mcp/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
