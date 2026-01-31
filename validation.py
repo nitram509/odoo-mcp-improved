@@ -189,25 +189,21 @@ def run_validation():
     print("\n=== Validando recursos ===")
 
     try:
-
         print("✅ Recursos de ventas importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de ventas: {str(e)}")
 
     try:
-
         print("✅ Recursos de compras importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de compras: {str(e)}")
 
     try:
-
         print("✅ Recursos de inventario importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de inventario: {str(e)}")
 
     try:
-
         print("✅ Recursos de contabilidad importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar recursos de contabilidad: {str(e)}")
@@ -216,7 +212,6 @@ def run_validation():
     print("\n=== Validando prompts ===")
 
     try:
-
         print("✅ Prompts importados correctamente")
     except Exception as e:
         print(f"❌ Error al importar prompts: {str(e)}")
@@ -231,7 +226,6 @@ def run_validation():
     #     print(f"❌ Error al importar módulo de extensiones: {str(e)}")
 
     try:
-
         print("✅ Servidor MCP importado correctamente")
     except Exception as e:
         print(f"❌ Error al importar servidor MCP: {str(e)}")
