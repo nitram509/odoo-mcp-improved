@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "odoo-mcp-improved"
+name = "odoo-superior-mcp"
 version = "1.0.2"
 description = "MCP Server for Odoo Integration"
 readme = "README.md"
@@ -27,8 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nitram509/odoo-mcp-improved"
-Issues = "https://github.com/nitram509/odoo-mcp-improved/issues"
+Homepage = "https://github.com/nitram509/odoo-superior-mcp"
+Issues = "https://github.com/nitram509/odoo-superior-mcp/issues"
 
 [project.optional-dependencies]
 dev = [

@@ -7,8 +7,8 @@
 
 ![Odoo MCP Improved Logo](https://img.shields.io/badge/Odoo%20MCP-Improved-brightgreen?style=for-the-badge&logo=odoo)
 
-[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue.svg)](https://pypi.org/project/odoo-mcp-improved/)
-[![Python Versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://pypi.org/project/odoo-mcp-improved/)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue.svg)](https://pypi.org/project/odoo-superior-mcp/)
+[![Python Versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://pypi.org/project/odoo-superior-mcp/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **Enhanced Model Context Protocol (MCP) server for Odoo ERP with advanced tools for sales, purchases, inventory and accounting**
@@ -69,7 +69,7 @@ This extended version enhances the original MCP-Odoo implementation with advance
 ### Using pip
 
 ```bash
-pip install odoo-mcp-improved
+pip install odoo-superior-mcp
 ```
 
 
