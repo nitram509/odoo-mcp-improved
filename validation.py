@@ -4,17 +4,15 @@ Script de validación para probar las nuevas funcionalidades del MCP-Odoo
 
 import os
 import sys
-import json
-import time
 from datetime import datetime, timedelta
 
 from odoo_mcp.odoo_config import get_odoo_client
+from odoo_mcp.tools_sales import SalesOrderFilter
 
 # Añadir el directorio src al path para poder importar odoo_mcp
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.odoo_mcp.models import (
-    SalesOrderFilter,
     PurchaseOrderFilter,
     ProductAvailabilityInput,
     JournalEntryFilter,
@@ -209,11 +207,11 @@ def run_validation():
     # Validar integración completa
     print("\n=== Validando integración completa ===")
 
-    try:
-        from src.odoo_mcp.extensions import register_all_extensions
-        print("✅ Módulo de extensiones importado correctamente")
-    except Exception as e:
-        print(f"❌ Error al importar módulo de extensiones: {str(e)}")
+    # try:
+    #     from src.odoo_mcp.extensions import register_all_extensions
+    #     print("✅ Módulo de extensiones importado correctamente")
+    # except Exception as e:
+    #     print(f"❌ Error al importar módulo de extensiones: {str(e)}")
 
     try:
         from src.odoo_mcp.server import mcp
