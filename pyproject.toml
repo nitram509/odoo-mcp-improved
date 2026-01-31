@@ -23,7 +23,6 @@ authors = [
 ]
 dependencies = [
     "fastmcp>=2.14.4",
-    "requests>=2.31.0",
     "pypi-xmlrpc==2020.12.3",
 ]
 
@@ -44,12 +43,12 @@ package-dir = {"" = "src"}
 packages = ["odoo_mcp"]
 
 [tool.black]
-line-length = 88
+line-length = 120
 target-version = ["py312"]
 
 [tool.isort]
 profile = "black"
-line_length = 88
+line_length = 120
 
 [tool.mypy]
 python_version = "3.12"
