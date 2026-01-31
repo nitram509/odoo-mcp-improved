@@ -72,6 +72,19 @@ This extended version enhances the original MCP-Odoo implementation with advance
 pip install odoo-superior-mcp
 ```
 
+### Using a pre-built Docker image
+
+```bash
+docker pull nitram509/odoo-superior-mcp:latest
+docker run -p 8081:8081 \
+   -e ODOO_URL=http://your-odoo-instance.com \
+   -e ODOO_DB=your_database \
+   -e ODOO_USERNAME=your_username \
+   -e ODOO_PASSWORD=your_password \
+   -e ODOO_TIMEOUT="10" \
+   -e ODOO_VERIFY_SSL="0" \
+   nitram509/odoo-superior-mcp:latest
+```
 
 ## 🚀 Usage
 
