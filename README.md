@@ -3,8 +3,6 @@
 
 ![demo.gif](demo.gif)
 
-<div align="center">
-
 ![Odoo Superior MCP Logo](https://img.shields.io/badge/Odoo%20Superior%20MCP-brightgreen?style=for-the-badge&logo=odoo)
 
 [![PyPI version](https://img.shields.io/badge/pypi-v1.1.2-blue.svg)](https://pypi.org/project/odoo-superior-mcp/)
@@ -14,8 +12,6 @@
 **Enhanced Model Context Protocol (MCP) server for [Odoo ERP](https://www.odoo.com/) with advanced tools for sales, purchases, inventory and accounting**
 
 Based on `odoo-mcp-enhanced` but with up-to-date libraries, using Python 3.12, and improved logging and configuration options.
-
-</div>
 
 ---
 
@@ -39,6 +35,11 @@ Based on `odoo-mcp-enhanced` but with up-to-date libraries, using Python 3.12, a
 Odoo Superior MCP is a comprehensive implementation of the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) for [Odoo ERP](https://www.odoo.com/) systems. It provides a bridge between large language models like Claude and your Odoo instance, enabling AI assistants to interact directly with your business data and processes.
 
 This extended version enhances the original MCP-Odoo implementation with advanced tools and resources for sales, purchases, inventory management, and accounting, making it a powerful solution for AI-assisted business operations.
+
+#### Links
+
+* PyPi - https://pypi.org/project/odoo-superior-mcp/
+* Docker Hub - https://hub.docker.com/repository/docker/nitram509/odoo-superior-mcp
 
 ---
 
