@@ -244,7 +244,9 @@ Odoo Superior MCP includes specialized prompts for different business scenarios:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-This repo is extended from [mcp-odoo](https://github.com/tuanle96/mcp-odoo) - [Lê Anh Tuấn](https://github.com/tuanle96)
+This repo incorporates prior work from 
+* [odoo-mcp-improved](https://github.com/hachecito/odoo-mcp-improved) by Yhasmani
+* [mcp-odoo](https://github.com/tuanle96/mcp-odoo) by Lê Anh Tuấn
 
 ---
 
